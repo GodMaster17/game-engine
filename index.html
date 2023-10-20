@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <title>Snow JS Test</title>
+        <script src="Object.js"></script>
+
+        <script src="Objects/Snow.js"></script>
+        <script src="Objects/Player.js"></script>
+
+
+        <style>
+            .sprite {
+                position: absolute;
+
+            }
+        </style>
+    </head>
+
+    <body style="background-image: linear-gradient(black,navy); color: white; overflow: hidden; margin-top: 0px; margin-left: 0px">
+        <p id="snowCount"></p>
+        <canvas id="SCREEN" width="640" height="480"></canvas>
+        <canvas id="BUFFER" style="" width="640" height="480"></canvas>
+        <script>
+            var wPressed = false
+            var aPressed = false
+            var sPressed = false
+            var dPressed = false
+            const canvas = document.getElementById("BUFFER")
+            const ctx = canvas.getContext("2d")
+            
+            window.addEventListener('keydown', function(e){
+                if (e.key === 'w') {
+                    wPressed = true
+                }
+                if (e.key === 'a') {
+                    aPressed = true
+                }
+                if (e.key === 's') {
+                    sPressed = true
+                }
+                if (e.key === 'd') {
+                    dPressed = true
+                }
+            })
+            window.addEventListener('keyup', function(e){
+                if (e.key === 'w') {
+                    wPressed = false
+                }
+                if (e.key === 'a') {
+                    aPressed = false
+                }
+                if (e.key === 's') {
+                    sPressed = false
+                }
+                if (e.key === 'd') {
+                    dPressed = false
+                }
+            })
+            const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+            const snowLimit = 2000;
+            var snowCount = 0;
+            const smoothingFactor = 2;
+            const bbbbbb = document.getElementsByTagName("body")[0];
+            function randomNumber(min, max) {
+                return Math.floor(Math.random() * (max - min) + min)
+            
+            }
+
+            var spriteList = []
+
+            async function doTheStuff() {
+                while (true) {
+                    await sleep(62);
+                    for (i = 0; i < 20; i++) {
+                        var hbox = randomNumber(5,12)
+                        var xsadas = new Snow(randomNumber(0,window.outerWidth),randomNumber(0,10), randomNumber(-15, 15), randomNumber(5,15),hbox,hbox);
+                        spriteList.push(xsadas)
+                    }
+
+            }
+            }
+            const gravity = 3;
+            async function updateAll() {
+                while (true) {
+                    ctx.rect(0,0,640,480)
+                    ctx.fillStyle = "black"
+                    ctx.fill()
+                    for (let i = 0; i < spriteList.length; i++) {
+                            spriteList[i].update()
+                    }
+                    document.getElementById("SCREEN").getContext("2d").drawImage(canvas,0,0)
+                    await sleep(50/smoothingFactor);
+
+
+                }
+            }
+            var plr = new Player(0,0,25,25,25,25)
+            spriteList.push(plr)
+            doTheStuff();
+            updateAll()
+
+        </script>
+    </body>
+</html>
