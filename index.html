@@ -1,6 +1,24 @@
 <html>
     <head>
         <title>Snow JS Test</title>
+        <script>
+            var camX = 0;
+            var sssssssssss = 15;
+            var imgCacheIdx = 0;
+            var imgList = {}
+            var screenWidth = 1080;
+            var screenHeight = 999;
+            var globals = {
+                "camX": 0,
+                "camY": 0,
+                "boundLeft": 0,
+                "boundRight": 15000,
+                "boundUp": 0,
+                "boundDown": 10000,
+                "primarySprite": null, //sprite that the camera would follow
+            }
+
+        </script>
         <script src="Object.js"></script>
 
         <script src="Objects/Snow.js"></script>
@@ -15,17 +33,37 @@
         </style>
     </head>
 
-    <body style="background-image: linear-gradient(black,navy); color: white; overflow: hidden; margin-top: 0px; margin-left: 0px">
+    <body style="background-image: linear-gradient(black,navy); color: white; margin-top: 0px; margin-left: 0px">
         <p id="snowCount"></p>
-        <canvas id="SCREEN" width="640" height="480"></canvas>
-        <canvas id="BUFFER" style="" width="640" height="480"></canvas>
+        <div id="CACHE" style="content-visibility: hidden"></div>
+        <div ID="snowwwwwwwwww">
+
+        </div>
+        <div id="SPRITES">
+
+        </div>
+        <p id="FPS"></p>
+        <canvas id="SCREEN" width="1080" height="999"></canvas>
         <script>
+           // var imgList = {
+     //            "media/test.png": 'xd',
+   //              "media/snow.webp"
+        //    }
+            var fpsarray = []
+            var currentTime = 0;
+            function tick() {
+                currentTime = performance.now()
+            }
+            function tock() {
+                var timeDiff = performance.now()-currentTime
+                currentTime = 0;
+                fpsarray.push((1.0/timeDiff)*100)
+//                return (1.0/timeDiff)*100
+            }
             var wPressed = false
             var aPressed = false
             var sPressed = false
             var dPressed = false
-            const canvas = document.getElementById("BUFFER")
-            const ctx = canvas.getContext("2d")
             
             window.addEventListener('keydown', function(e){
                 if (e.key === 'w') {
@@ -65,35 +103,70 @@
             
             }
 
+
             var spriteList = []
 
             async function doTheStuff() {
                 while (true) {
                     await sleep(62);
                     for (i = 0; i < 20; i++) {
-                        var hbox = randomNumber(5,12)
-                        var xsadas = new Snow(randomNumber(0,window.outerWidth),randomNumber(0,10), randomNumber(-15, 15), randomNumber(5,15),hbox,hbox);
+                        var hbox = randomNumber(5,15)
+                        var xsadas = new Snow(randomNumber(-sssssssssss,window.outerWidth+sssssssssss)+camX,randomNumber(0,10), randomNumber(-15, 15), randomNumber(5,15),hbox,hbox);
                         spriteList.push(xsadas)
                     }
 
             }
             }
             const gravity = 3;
-            async function updateAll() {
-                while (true) {
-                    ctx.rect(0,0,640,480)
-                    ctx.fillStyle = "black"
-                    ctx.fill()
-                    for (let i = 0; i < spriteList.length; i++) {
-                            spriteList[i].update()
+            async function drawAll() {
+                for (let i = 0; i < spriteList.length; i++) {
+                    var canvas = document.getElementById("SCREEN")
+                    var ctx = canvas.getContext("2d")
+                    var xC = spriteList[i].x
+                    var yC = spriteList[i].y
+                    var width = spriteList[i].width
+                    var height = spriteList[i].height
+                    if (spriteList[i].evaluatedSrc in imgList) {
+                        var img = document.getElementById("CACHE").getElementById(imgList[spriteList[i].evaluatedSrc])
+                        ctx.drawImage(img,xC,yC,width,height)
+                    } else {
+                        var img = new Image()
+                        img.onload = function(){
+                            ctx.drawImage(img,xC,yC,width,height)
+                        }
+                        img.src = spriteList[i].evaluatedSrc
                     }
-                    document.getElementById("SCREEN").getContext("2d").drawImage(canvas,0,0)
-                    await sleep(50/smoothingFactor);
-
-
                 }
             }
+            function updateAll() {
+                tick()
+                requestAnimationFrame(updateAll)
+                
+                var canvas = document.getElementById("SCREEN")
+                var ctx = canvas.getContext("2d")
+                ctx.save()
+                ctx.fillStyle = "black"
+                ctx.fillRect(0,0,screenWidth,screenHeight)
+                for (let i = 0; i < spriteList.length; i++) {
+                        spriteList[i].update()
+                }
+                globals.camX = globals.primarySprite.x
+                //drawAll()
+                ctx.restore()
+                tock()
+                if (fpsarray.length >= 10) {
+                    var n = 0;
+                    for (let i = 0; i < fpsarray.length; i++) {
+                        n += fpsarray[i]
+                    }
+                    n = n / 10
+                    fpsarray = []
+                    document.getElementById("FPS").innerHTML = n
+                }
+                
+            }
             var plr = new Player(0,0,25,25,25,25)
+            globals.primarySprite = plr;
             spriteList.push(plr)
             doTheStuff();
             updateAll()
