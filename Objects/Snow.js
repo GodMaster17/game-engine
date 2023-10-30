@@ -5,21 +5,21 @@ class Snow extends Object {
         this.yVel = yVel
     }
     update() {
-        var ccc = document.getElementById("SCREEN")
-        if (this.y >= ccc.height) {
+        
+        if (this.y >= screenHeight) {
             super.deleteMe()
         }
-        if (this.x >= ccc.width) {
+        if (this.x >= screenWidth+sssssssssss) {
             super.deleteMe()
         }
         if (this.y < -15) {
             super.deleteMe()
         }
-        if (this.x < -15) {
+        if (this.x < -15-sssssssssss) {
             super.deleteMe()
         }
-        this.y += this.yVel/smoothingFactor
-        this.x += this.xVel/smoothingFactor
+        this.y += this.yVel/2/smoothingFactor
+        this.x += this.xVel/2/smoothingFactor
         super.update()
     }
 }
